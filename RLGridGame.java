@@ -135,17 +135,49 @@ public class RLGridGame extends JPanel implements Runnable {
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
 
-        // Draw grid
+        // Draw grid tiles
         for (int y = 0; y < GRID_SIZE; y++) {
             for (int x = 0; x < GRID_SIZE; x++) {
                 int type = grid[y][x];
-                if (type == 1) g.setColor(Color.RED);      // Trap
-                else if (type == 2) g.setColor(Color.GREEN); // Goal
-                else g.setColor(Color.LIGHT_GRAY);         // Empty
+                if (type == 1) g.setColor(Color.RED);         // Trap
+                else if (type == 2) g.setColor(Color.GREEN);  // Goal
+                else g.setColor(Color.LIGHT_GRAY);            // Empty
 
                 g.fillRect(x * TILE_SIZE, y * TILE_SIZE, TILE_SIZE, TILE_SIZE);
                 g.setColor(Color.BLACK);
                 g.drawRect(x * TILE_SIZE, y * TILE_SIZE, TILE_SIZE, TILE_SIZE);
+
+                // Draw Q-values (skip traps and goal for clarity)
+                if (type == 0) {
+                    int state = getState(x, y);
+                    g.setFont(new Font("Monospaced", Font.PLAIN, 10));
+
+                    // Find best action
+                    int bestAction = 0;
+                    for (int a = 1; a < 4; a++) {
+                        if (Q[state][a] > Q[state][bestAction]) bestAction = a;
+                    }
+
+                    // Draw each action
+                    for (int action = 0; action < 4; action++) {
+                        if (action == bestAction) {
+                            g.setColor(Color.BLUE); // Best action
+                        } else {
+                            g.setColor(Color.DARK_GRAY); // Other actions
+                        }
+
+                        String label = "";
+                        int q = (int) Q[state][action];
+                        int tx = x * TILE_SIZE, ty = y * TILE_SIZE;
+
+                        switch (action) {
+                            case 0: label = "↑" + q; g.drawString(label, tx + 40, ty + 15); break;
+                            case 1: label = "↓" + q; g.drawString(label, tx + 40, ty + 95); break;
+                            case 2: label = "←" + q; g.drawString(label, tx + 5, ty + 55); break;
+                            case 3: label = "→" + q; g.drawString(label, tx + 75, ty + 55); break;
+                        }
+                    }
+                }
             }
         }
 
@@ -153,6 +185,7 @@ public class RLGridGame extends JPanel implements Runnable {
         g.setColor(Color.BLUE);
         g.fillOval(agentX * TILE_SIZE + 30, agentY * TILE_SIZE + 30, 40, 40);
     }
+
 
     public static void main(String[] args) {
         JFrame frame = new JFrame("RL Grid World");
