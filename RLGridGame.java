@@ -1,3 +1,13 @@
+/*
+This is the AI's learned knowledge. Learned Q-values — the agent's memory
+For each state (grid cell), it stores Q-values for four possible actions (up, down, left, right).
+It updates the estimated value of an action based on the reward received and the best future action.
+This is where the AI learns from trial and error.
+chooseAction() Policy function — how the agent chooses what to do
+run() Learning loop — how the agent improves over time
+This AI learns how to navigate a grid world to reach a goal while avoiding traps, by trial-and-error.
+It's not hardcoded like rule-based systems or FSMs — it discovers behavior using rewards.
+ */
 import javax.swing.*;
 import java.awt.*;
 import java.util.Random;
