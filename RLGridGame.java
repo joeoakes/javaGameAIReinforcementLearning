@@ -35,7 +35,7 @@ public class RLGridGame extends JPanel implements Runnable {
     int[][] grid = new int[GRID_SIZE][GRID_SIZE]; // 0 = empty, 1 = trap, 2 = goal
     int agentX = 0, agentY = 0;
 
-    // Corrected Q-table type
+    // Q-table type
     double[][] Q = new double[GRID_SIZE * GRID_SIZE][4]; // Q[state][action]
     double alpha = 0.1;   // learning rate
     double gamma = 0.9;   // discount factor
@@ -69,14 +69,14 @@ public class RLGridGame extends JPanel implements Runnable {
             case 3: newX = Math.min(GRID_SIZE - 1, x + 1); break; // Right
         }
 
-        int reward = -1;
-        boolean done = false;
+        int reward = -1;  //Default reward for a move is -1 (small penalty to encourage shorter paths).
+        boolean done = false;  //done is false unless a goal or trap is reached.
 
         if (grid[newY][newX] == 1) {
-            reward = -100;
+            reward = -100;  // trap tile (1), it gets a -100 penalty and the episode ends.
             done = true;
         } else if (grid[newY][newX] == 2) {
-            reward = 100;
+            reward = 100;  //goal tile (2), it gets a +100 reward and the episode ends.
             done = true;
         }
 
