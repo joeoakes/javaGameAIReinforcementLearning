@@ -60,9 +60,15 @@ public class RLGridGame extends JPanel implements Runnable {
         return y * GRID_SIZE + x;
     }
 
+    /*
+    x, y: Current position of the agent.
+    action: The direction the agent wants to move (0–3).
+    0 = Up, 1 = Down, 2 = Left, 3 = Right
+     */
     StepResult step(int x, int y, int action) {
         int newX = x, newY = y;
         switch (action) {
+            //Math.max() and Math.min() are used to prevent the agent from moving outside the grid boundaries
             case 0: newY = Math.max(0, y - 1); break; // Up
             case 1: newY = Math.min(GRID_SIZE - 1, y + 1); break; // Down
             case 2: newX = Math.max(0, x - 1); break; // Left
@@ -79,7 +85,7 @@ public class RLGridGame extends JPanel implements Runnable {
             reward = 100;  //goal tile (2), it gets a +100 reward and the episode ends.
             done = true;
         }
-
+        //New agent position, Reward received, Whether the episode is finished
         return new StepResult(newX, newY, reward, done);
     }
 
