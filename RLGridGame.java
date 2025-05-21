@@ -89,13 +89,21 @@ public class RLGridGame extends JPanel implements Runnable {
         return new StepResult(newX, newY, reward, done);
     }
 
+    //epsilon-greedy strategy.
     int chooseAction(int x, int y) {
+        //rand.nextDouble() generates a value between 0 and 1.
+        //If it's less than epsilon (e.g., 0.2), a random action (0–3) is chosen.
         if (rand.nextDouble() < epsilon) {
-            return rand.nextInt(4); // Explore
+            return rand.nextInt(4); // Explore unknown or less frequently tried paths
         }
 
+        //Converts the (x, y) position into a single state index for the Q-table.
+        //For our 5×5 grid, state = y * GRID_SIZE + x
         int state = getState(x, y);
-        double[] qValues = Q[state];
+        double[] qValues = Q[state]; //Retrieves the Q-values for all 4 actions in the current state.
+
+        //Finds the action with the highest Q-value (i.e., best known outcome so far).
+        //this method ensures the agent sometimes explores, but usually exploits what it has learned so far
         int bestAction = 0;
         for (int a = 1; a < 4; a++) {
             if (qValues[a] > qValues[bestAction]) {
